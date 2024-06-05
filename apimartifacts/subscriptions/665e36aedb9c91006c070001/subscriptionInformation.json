@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "scope": "/subscriptions/804dbb54-870d-4fe0-93fd-68b5c4948d5b/resourceGroups/rg-bra-apim/providers/Microsoft.ApiManagement/service/apim-bra/products/starter",
+    "allowTracing": false,
+    "ownerId": "/subscriptions/804dbb54-870d-4fe0-93fd-68b5c4948d5b/resourceGroups/rg-bra-apim/providers/Microsoft.ApiManagement/service/apim-bra/users/1",
+    "state": "active"
+  }
+}

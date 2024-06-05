@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "path": "echo2",
+    "apiRevision": "1",
+    "authenticationSettings": {
+      "oAuth2AuthenticationSettings": [],
+      "openidAuthenticationSettings": []
+    },
+    "description": "Teste de Pull Request 2",
+    "isCurrent": true,
+    "displayName": "Echo API",
+    "protocols": [
+      "https"
+    ],
+    "serviceUrl": "http://echoapi.cloudapp.net/api",
+    "subscriptionKeyParameterNames": {
+      "header": "Ocp-Apim-Subscription-Key",
+      "query": "subscription-key"
+    },
+    "subscriptionRequired": true
+  }
+}

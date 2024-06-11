@@ -6,9 +6,9 @@ on:
       destination-enviroment:
         type: string
         required: true
-      commit-id:
-        type: string
-        required: true
+      # commit-id:
+      #   type: string
+      #   required: true
 env:
   apiops_release_version: v6.0.0-alpha.1.0.8
  

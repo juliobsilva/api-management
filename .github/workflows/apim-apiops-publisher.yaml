@@ -23,6 +23,10 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 2
+    - name: Set the Commit Id
+      id: commit
+      run: |
+          echo "::set-output name=commit_id::${{ github.sha }}"
  
     - name: Runs APIOPS Publisher
       env:
@@ -36,7 +40,7 @@ jobs:
         CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-enviroment }}.yaml
         API_MANAGEMENT_ENVIRONMENT: dev
         API_MANAGEMENT_ENVIROMENT:
-        COMMIT_ID: ${{ inputs.commit-id }}
+        COMMIT_ID: ${{ steps.commit.outputs.commit_id }}
  
       run: |
         Set-StrictMode -Version Latest

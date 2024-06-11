@@ -12,7 +12,7 @@ env:
  
 jobs:
   extractor:
-    runs-on: ${{ vars.RUNNER_DEV }}
+    runs-on: ubuntu-latest
     environment: ${{ inputs.source-enviroment }}
     steps:
     - uses: actions/checkout@v3

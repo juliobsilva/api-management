@@ -16,7 +16,7 @@ jobs:
  
   publisher:
     environment: ${{ inputs.destination-enviroment }}
-    runs-on: ${{ vars.RUNNER_DEV }}
+    runs-on: ubuntu-latest
  
     steps:
  

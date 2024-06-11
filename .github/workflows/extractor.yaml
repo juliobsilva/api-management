@@ -14,7 +14,7 @@ permissions:
  
 jobs:
   call-build:
-    uses: ./.github/workflows/apim-apiops-extractor.yaml
+    uses: ./apim-apiops-extractor.yaml
     with:
       source-enviroment: ${{ inputs.source-enviroment }}
     secrets: inherit

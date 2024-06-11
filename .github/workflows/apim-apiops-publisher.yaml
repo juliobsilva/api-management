@@ -23,6 +23,27 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 2
+
+    # Run Spectral
+    - uses: actions/setup-node@v3
+      with:
+        node-version: "14"
+    - run: npm install -g @stoplight/spectral
+    - run: spectral lint "${{ GITHUB.WORKSPACE }}/apimartifacts\apis\*.{json,yml,yaml}" --ruleset https://raw.githubusercontent.com/connectedcircuits/devops-api-linter/main/rules.yaml
+
+    # Add this step for each APIM environment and pass specific set of secrets that you want replaced in the env section below
+    - name: "Perform namevalue secret substitution in configuration.${{ inputs.destination-enviroment }}.yaml"
+      if: (inputs.destination-enviroment == 'prod' )
+      uses: cschleiden/replace-tokens@v1.1
+      with:
+        tokenPrefix: "{#"
+        tokenSuffix: "#}"
+        files: ${{ format('["**/configuration.{0}.yaml"]', inputs.destination-enviroment) }}
+    # specify environment specific secrets to be replaced. For example the QA environment could have a different set sercrets to
+    # replace within the configuration.[environment].yaml file
+      env:
+        testSecretValue: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+
     - name: Set the Commit Id
       id: commit
       run: |

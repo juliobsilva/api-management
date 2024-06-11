@@ -1,4 +1,4 @@
-apimServiceName: api-bra-prd
+apimServiceName: apim-bra
 # namedValues:
 #   - name: environment
 #     properties:

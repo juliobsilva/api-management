@@ -76,18 +76,7 @@ jobs:
           git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
           git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         fi
-    #continue-on-error: true
-    # - name: Push the new branch
-    #   run: |
-    #     git add ${{ GITHUB.WORKSPACE }}/apimartifacts/*
-    #     git config --global user.name "APIOPS Extractor"
-    #     git config --global user.email "apiops-extractor@noreply.com"
-    #     git commit -m "API artifacts from run #${{ github.run_number }} and attempt #${{ github.run_attempt }}."
-    #     git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
- 
-      # echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-      # gh pr create --title "my tytle" --body "my body" --head "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
- 
+
     - name: Publish API Management Artifacts
       uses: actions/upload-artifact@v2
       with:

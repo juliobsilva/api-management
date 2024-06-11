@@ -1,10 +1,10 @@
 name: API Mgmt APIOPS Publisher
- 
+
 on:
   pull_request:
     branches: [develop]
     types: closed
- 
+
   workflow_dispatch:
     inputs:
       destination-enviroment:
@@ -14,11 +14,11 @@ on:
       commit-id:
         type: string
         required: true
- 
+
 jobs:
- 
+
   call-build-pr:
-    uses: ./apim-apiops-publisher.yaml
+    uses:  juliobsilva/apim-management/.github/workflows/apim-apiops-publisher.yaml@main
     with:
       destination-enviroment: ${{ github.event_name == 'pull_request' && 'prod' || inputs.destination-enviroment }}
       commit-id: ${{ github.event_name == 'pull_request' && github.sha || inputs.commit-id  }}

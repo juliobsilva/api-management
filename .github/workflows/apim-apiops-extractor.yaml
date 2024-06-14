@@ -8,7 +8,7 @@ on:
         required: true
  
 env:
-  apiops_release_version: v6.0.0-alpha.1.0.8
+  apiops_release_version: v6.0.0-alpha.1.0.9
  
 jobs:
   extractor:

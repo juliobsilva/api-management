@@ -82,3 +82,6 @@ jobs:
       with:
         name: artifacts-from-portal
         path: ${{ GITHUB.WORKSPACE }}/apimartifacts
+
+    - name: Use action_github
+      uses: juliobsilva/action_github/.github/action_github@main

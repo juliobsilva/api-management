@@ -84,4 +84,4 @@ jobs:
         path: ${{ GITHUB.WORKSPACE }}/apimartifacts
 
     - name: Use action_github
-      uses: juliobsilva/action_github/.github/actions/action.yaml@main
+      uses: juliobsilva/action_github/.github/actions/action.yaml@v1

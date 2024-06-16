@@ -75,6 +75,7 @@ jobs:
 
   create-pull-request:
     runs-on: ubuntu-latest
+    needs: extractor
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

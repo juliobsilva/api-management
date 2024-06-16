@@ -72,6 +72,10 @@ jobs:
     - name: Install dependencies
       run: npm install
       working-directory: ./.github/workflows/create-pull-request
+      
+    - name: Insta module core
+      run: npm install @actions/core
+      working-directory: ./.github/workflows/create-pull-request
 
     - name: Run custom action to create pull request
       uses: juliobsilva/action_github/.github/actions/create-pull-request@main

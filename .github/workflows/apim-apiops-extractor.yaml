@@ -75,7 +75,7 @@ jobs:
 
 
     - name: Run custom action to create pull request
-      uses: ./.github/actions/create-pull-request/action.yml@main                   
+      uses: ./.github/actions/create-pull-request                 
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         branch-name: "extracted-api/run-id-${{ github.run_id }}"

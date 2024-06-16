@@ -75,7 +75,7 @@ jobs:
 
 
     - name: Run custom action to create pull request
-      uses: juliobsilva/action_github/.github/actions/create-pull-request@main
+      uses: juliobsilva/sandbox-calle/.github/actions/create-pull-request@main                    
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         branch-name: "extracted-api/run-id-${{ github.run_id }}"

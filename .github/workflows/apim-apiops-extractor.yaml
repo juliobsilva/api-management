@@ -102,8 +102,8 @@ jobs:
     #       git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
     #     fi
 
-    - name: Publish API Management Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: artifacts-from-portal
-        path: ${{ GITHUB.WORKSPACE }}/apimartifacts
+      - name: Publish API Management Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-from-portal
+          path: ${{ GITHUB.WORKSPACE }}/apimartifacts

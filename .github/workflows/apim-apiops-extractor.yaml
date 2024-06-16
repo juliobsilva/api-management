@@ -17,9 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
  
-    # - name: Create a new branch
-    #   run: |
-    #     git checkout -b "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
+    - name: Create a new branch
+      run: |
+        git checkout -b "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
  
  
     - name: Runs APIOPS Extractor

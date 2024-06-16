@@ -3,7 +3,7 @@ name: APIM APIOPS Extractor
 on:
   workflow_call:
     inputs:
-      source-enviroment:
+      source-environment:
         type: string
         required: true
 
@@ -13,16 +13,9 @@ env:
 jobs:
   extractor:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.source-enviroment }}
+    environment: ${{ inputs.source-environment }}
     steps:
     - uses: actions/checkout@v4
-
-    - name: Create a new branch
-      id: create_branch
-      run: |
-        BRANCH_NAME="extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
-        git checkout -b $BRANCH_NAME
-        echo "branch-name=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Runs APIOPS Extractor
       env:
@@ -67,7 +60,7 @@ jobs:
       shell: pwsh
 
     - name: Checkout repository
-      uses: actions/checkout@v4 
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -82,7 +75,6 @@ jobs:
       uses: ./.github/actions/create-pull-request
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: ${{ env.branch-name }}
         pr-title: "Pull Request for Run ID ${{ github.run_id }}"
         pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
 

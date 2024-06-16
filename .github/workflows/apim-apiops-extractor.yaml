@@ -1,23 +1,24 @@
 name: APIM APIOPS Extractor
- 
+
 on:
   workflow_call:
     inputs:
       source-enviroment:
         type: string
         required: true
- 
+
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
- 
+
 jobs:
   extractor:
     runs-on: ubuntu-latest
     environment: ${{ inputs.source-enviroment }}
     steps:
     - uses: actions/checkout@v4
- 
+
     - name: Create a new branch
+      id: create_branch
       run: |
         git checkout -b "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
 
@@ -37,32 +38,31 @@ jobs:
         $ErrorActionPreference = "Stop"
         $VerbosePreference = "Continue"
         $InformationPreference = "Continue"
- 
+
         Write-Information "Setting name variables..."
         $releaseFileName = "extractor-linux-x64.zip"
         $executableFileName = "extractor"
- 
+
         Write-Information "Downloading release..."
         $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
         $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
         Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
- 
+
         Write-Information "Extracting release..."
         $executableFolderPath = Join-Path "${{ runner.temp }}" "extractor"
         Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
         $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
- 
+
         Write-Information "Setting file permissions..."
         & chmod +x "$executableFilePath"
         if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
- 
+
         Write-Information "Running extractor..."
         & "$executableFilePath"
         if ($LASTEXITCODE -ne 0) { throw "Running extractor failed."}
- 
+
         Write-Information "Execution complete."
       shell: pwsh
-
 
     - name: Checkout repository
       uses: actions/checkout@v4 
@@ -76,27 +76,13 @@ jobs:
       run: npm install
       working-directory: ./.github/actions/create-pull-request
 
-
     - name: Run custom action to create pull request
-      uses: ./.github/actions/create-pull-request                 
+      uses: ./.github/actions/create-pull-request
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-       #branch-name: ${{ env.branch-name }}
+        branch-name: "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         pr-title: "Pull Request for Run ID ${{ github.run_id }}"
         pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
- 
-    # - name: Push the new branch
-    #   run: |
-    #     git add ${{ GITHUB.WORKSPACE }}/apimartifacts/*
-    #     if git diff-index --quiet HEAD --; then
-    #       echo "Não há mudanças a serem extraidas da API."
-    #     else
-    #       git config --global user.name "APIOPS Extractor"
-    #       git config --global user.email "apiops-extractor@noreply.com"
-    #       git commit -m "API artifacts from run #${{ github.run_number }} and attempt #${{ github.run_attempt }}."
-    #       git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
-    #       git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
-    #     fi
 
     - name: Publish API Management Artifacts
       uses: actions/upload-artifact@v2

@@ -73,20 +73,14 @@ jobs:
       run: npm install
       working-directory: ./.github/actions/create-pull-request
 
-  create-pull-request:
-    runs-on: ubuntu-latest
-    needs: extractor
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Run custom action to create pull request
-        uses: juliobsilva/sandbox-calle/.github/actions/create-pull-request@main                    
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          branch-name: "extracted-api/run-id-${{ github.run_id }}"
-          pr-title: "Pull Request for Run ID ${{ github.run_id }}"
-          pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
+    - name: Run custom action to create pull request
+      uses: juliobsilva/sandbox-calle/.github/actions/create-pull-request@main                    
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        branch-name: "extracted-api/run-id-${{ github.run_id }}"
+        pr-title: "Pull Request for Run ID ${{ github.run_id }}"
+        pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
  
     # - name: Push the new branch
     #   run: |
@@ -101,8 +95,8 @@ jobs:
     #       git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
     #     fi
 
-      - name: Publish API Management Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts-from-portal
-          path: ${{ GITHUB.WORKSPACE }}/apimartifacts
+    - name: Publish API Management Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts-from-portal
+        path: ${{ GITHUB.WORKSPACE }}/apimartifacts

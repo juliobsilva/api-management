@@ -17,9 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
  
-    - name: Create a new branch
-      run: |
-        git checkout -b "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
+    # - name: Create a new branch
+    #   run: |
+    #     git checkout -b "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
  
  
     - name: Runs APIOPS Extractor
@@ -64,23 +64,30 @@ jobs:
         Write-Information "Execution complete."
       shell: pwsh
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+  create-pull-request:
+    runs-on: ubuntu-latest
+    needs: extractor
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2 
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./.github/actions/create-pull-request
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./.github/actions/create-pull-request
 
 
-    - name: Run custom action to create pull request
-      uses: ./.github/actions/create-pull-request                 
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: "extracted-api/run-id-${{ github.run_id }}"
-        pr-title: "Pull Request for Run ID ${{ github.run_id }}"
-        pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
+      - name: Run custom action to create pull request
+        uses: ./.github/actions/create-pull-request                 
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch-name: "extracted-api/run-id-${{ github.run_id }}"
+          pr-title: "Pull Request for Run ID ${{ github.run_id }}"
+          pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
  
     # - name: Push the new branch
     #   run: |

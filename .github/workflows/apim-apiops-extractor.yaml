@@ -12,6 +12,9 @@ env:
  
 jobs:
   extractor:
+    outputs:
+        branch-name: ${{env.branch-name}}
+
     runs-on: ubuntu-latest
     environment: ${{ inputs.source-enviroment }}
     steps:
@@ -22,6 +25,7 @@ jobs:
         NEW_BRANCH="extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         echo "branch-name=$NEW_BRANCH" >> $GITHUB_ENV
         git checkout -b $NEW_BRANCH
+      
 
     - name: Runs APIOPS Extractor
       env:
@@ -99,7 +103,7 @@ jobs:
         uses: ./.github/actions/create-pull-request
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          branch-name: "extracted-api/run-id-${{ github.run_id }}"
+          branch-name: ${{env.branch-name}}
           pr-title: "Pull Request for Run ID ${{ github.run_id }}"
           pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
 

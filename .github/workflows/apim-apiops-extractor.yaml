@@ -74,6 +74,21 @@ jobs:
       with:
         node-version: '16'
 
+    
+ 
+    - name: Push the new branch
+      run: |
+        git add ${{ GITHUB.WORKSPACE }}/apimartifacts/*
+        if git diff-index --quiet HEAD --; then
+          echo "Não há mudanças a serem extraidas da API."
+        else
+          git config --global user.name "APIOPS Extractor"
+          git config --global user.email "apiops-extractor@noreply.com"
+          git commit -m "API artifacts from run #${{ github.run_number }} and attempt #${{ github.run_attempt }}."
+          git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
+          git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
+        fi
+        
     - name: Install dependencies
       run: npm install
       working-directory: ./.github/actions/create-pull-request
@@ -86,19 +101,6 @@ jobs:
         branch-name: ${{ env.branch-name }}
         pr-title: "Pull Request for Run ID ${{ github.run_id }}"
         pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
- 
-    # - name: Push the new branch
-    #   run: |
-    #     git add ${{ GITHUB.WORKSPACE }}/apimartifacts/*
-    #     if git diff-index --quiet HEAD --; then
-    #       echo "Não há mudanças a serem extraidas da API."
-    #     else
-    #       git config --global user.name "APIOPS Extractor"
-    #       git config --global user.email "apiops-extractor@noreply.com"
-    #       git commit -m "API artifacts from run #${{ github.run_number }} and attempt #${{ github.run_attempt }}."
-    #       git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
-    #       git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
-    #     fi
 
     - name: Publish API Management Artifacts
       uses: actions/upload-artifact@v2

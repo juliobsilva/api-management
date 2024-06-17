@@ -72,7 +72,7 @@ jobs:
       with:
         name: artifacts-from-portal
         path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
-        
+
   create-pull-request:
     needs: extractor
     runs-on: ubuntu-latest
@@ -88,7 +88,7 @@ jobs:
           path: "${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}"
 
       - name: Create artifacts pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: juliobsilva/create-pull-request@main
         env:
           API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts  # change this to the artifacts folder          
         with:

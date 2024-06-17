@@ -95,7 +95,7 @@ jobs:
 
 
     - name: Run custom action to create pull request
-      uses: ./.github/actions/create-pull-request                 
+      uses: desbravacloud/action-create-pull-requests@v1
       with:
         origin-branch: ${{env.branch-name}}
         target-branch: 'main'

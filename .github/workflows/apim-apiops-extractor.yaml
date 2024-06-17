@@ -65,7 +65,14 @@ jobs:
         Write-Information "Execution complete."
       shell: pwsh
 
-
+    - name: publish artifact
+      uses: actions/upload-artifact@v2
+      env:
+        API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts  # change this to the artifacts folder  
+      with:
+        name: artifacts-from-portal
+        path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
+        
   create-pull-request:
     needs: extractor
     runs-on: ubuntu-latest

@@ -97,10 +97,10 @@ jobs:
     - name: Run custom action to create pull request
       uses: ./.github/actions/create-pull-request                 
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: ${{ env.branch-name }}
-        pr-title: "Pull Request for Run ID ${{ github.run_id }}"
-        pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
+        origin-branch: ${{env.branch-name}}
+        target-branch: 'main'
+        custom-title: 'PR created'
+        custom-body: 'Please, check thease changes'
 
     - name: Publish API Management Artifacts
       uses: actions/upload-artifact@v2

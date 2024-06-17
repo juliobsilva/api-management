@@ -88,19 +88,19 @@ jobs:
           git push --set-upstream origin "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
           git diff "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}^" "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         fi
-        
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./.github/actions/create-pull-request
+
+    # - name: Install dependencies
+    #   run: npm install
+    #   working-directory: ./.github/actions/create-pull-request
 
 
-    - name: Run custom action to create pull request
-      uses: ./.github/actions/create-pull-request                 
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: ${{ env.branch-name }}
-        pr-title: "Pull Request for Run ID ${{ github.run_id }}"
-        pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
+    # - name: Run custom action to create pull request
+    #   uses: ./.github/actions/create-pull-request                 
+    #   with:
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    #     branch-name: ${{ env.branch-name }}
+    #     pr-title: "Pull Request for Run ID ${{ github.run_id }}"
+    #     pr-body: "This PR was created automatically for run ID ${{ github.run_id }}."
 
     - name: Publish API Management Artifacts
       uses: actions/upload-artifact@v2

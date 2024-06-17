@@ -86,6 +86,14 @@ jobs:
         with:
           name: artifacts-from-portal
           path: "${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}"
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+  
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./.github/actions/create-pull-request
 
       - name: Run custom action to create pull request
         uses: ./.github/actions/create-pull-request

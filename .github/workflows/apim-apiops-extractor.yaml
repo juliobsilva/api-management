@@ -13,7 +13,7 @@ env:
 jobs:
   extractor:
     outputs:
-        branch-name: ${{ steps.create_branch.outputs.branch_name }}
+      branch_name: ${{ steps.create_branch.outputs.branch_name }}
 
     runs-on: ubuntu-latest
     environment: ${{ inputs.source-enviroment }}
@@ -26,6 +26,7 @@ jobs:
         NEW_BRANCH="extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         echo "branch-name=$NEW_BRANCH" >> $GITHUB_ENV
         git checkout -b $NEW_BRANCH
+    
       
 
     - name: Runs APIOPS Extractor

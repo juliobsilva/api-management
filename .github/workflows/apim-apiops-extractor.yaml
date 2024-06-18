@@ -1,82 +1,85 @@
 name: APIM APIOPS Extractor
-
+ 
 on:
   workflow_call:
     inputs:
-      source-environment:
+      source-enviroment:
         type: string
         required: true
-
+ 
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
-
+ 
 jobs:
   extractor:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.source-environment }}
+    environment: ${{ inputs.source-enviroment }}
     outputs:
       branch: ${{ steps.create-branch.outputs.branch }}
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+ 
+    - name: Create new branch
+      id: create-branch
+      run: |
+        BRANCH_NAME="extracto/nome-${{ github.run_id }}"
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git checkout -b $BRANCH_NAME
+        git push origin $BRANCH_NAME
+        echo "::set-output name=branch::$BRANCH_NAME"
+  
+      
 
-      - name: Create new branch
-        id: create-branch
-        run: |
-          BRANCH_NAME="extracto/nome-${{ github.run_id }}"
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b $BRANCH_NAME
-          git push origin $BRANCH_NAME
-          echo "branch=$BRANCH_NAME" >> $GITHUB_ENV
-          echo "::set-output name=branch::$BRANCH_NAME"
+    - name: Runs APIOPS Extractor
+      env:
+        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        AZURE_RESOURCE_GROUP_NAME: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+        API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
+        API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
+        API_SPECIFICATION_FORMAT: "OpenAPIV3Yaml"
+        CONFIGURATION_YAML_PATH:  ${{ GITHUB.WORKSPACE }}/configuration.extractor.yaml
+      run: |
+        Set-StrictMode -Version Latest
+        $ErrorActionPreference = "Stop"
+        $VerbosePreference = "Continue"
+        $InformationPreference = "Continue"
+ 
+        Write-Information "Setting name variables..."
+        $releaseFileName = "extractor-linux-x64.zip"
+        $executableFileName = "extractor"
+ 
+        Write-Information "Downloading release..."
+        $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
+        $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
+        Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
+ 
+        Write-Information "Extracting release..."
+        $executableFolderPath = Join-Path "${{ runner.temp }}" "extractor"
+        Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
+        $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
+ 
+        Write-Information "Setting file permissions..."
+        & chmod +x "$executableFilePath"
+        if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
+ 
+        Write-Information "Running extractor..."
+        & "$executableFilePath"
+        if ($LASTEXITCODE -ne 0) { throw "Running extractor failed."}
+ 
+        Write-Information "Execution complete."
+      shell: pwsh
 
-      - name: Runs APIOPS Extractor
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_RESOURCE_GROUP_NAME: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-          API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
-          API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
-          API_SPECIFICATION_FORMAT: "OpenAPIV3Yaml"
-          CONFIGURATION_YAML_PATH:  ${{ GITHUB.WORKSPACE }}/configuration.extractor.yaml
-        run: |
-          Set-StrictMode -Version Latest
-          $ErrorActionPreference = "Stop"
-          $VerbosePreference = "Continue"
-          $InformationPreference = "Continue"
-
-          Write-Information "Setting name variables..."
-          $releaseFileName = "extractor-linux-x64.zip"
-          $executableFileName = "extractor"
-
-          Write-Information "Downloading release..."
-          $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
-          $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
-          Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
-
-          Write-Information "Extracting release..."
-          $executableFolderPath = Join-Path "${{ runner.temp }}" "extractor"
-          Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
-          $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
-
-          Write-Information "Setting file permissions..."
-          & chmod +x "$executableFilePath"
-          if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
-
-          Write-Information "Running extractor..."
-          & "$executableFilePath"
-          if ($LASTEXITCODE -ne 0) { throw "Running extractor failed."}
-
-          Write-Information "Execution complete."
-        shell: pwsh
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts-from-portal
-          path: ${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
+    - name: publish artifact
+      uses: actions/upload-artifact@v2
+      env:
+        API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts  # change this to the artifacts folder  
+      with:
+        name: artifacts-from-portal
+        path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
 
   create-pull-request:
     needs: extractor

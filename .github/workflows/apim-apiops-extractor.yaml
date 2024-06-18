@@ -95,6 +95,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: .github/action_github
 
       - name: Run custom action to create PR
         uses: juliobsilva/action_github@main

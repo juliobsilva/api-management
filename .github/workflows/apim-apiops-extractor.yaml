@@ -82,6 +82,11 @@ jobs:
         path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
 
 
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ steps.create-branch.outputs.branch }}
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -95,7 +100,7 @@ jobs:
       uses: ./.github/actions/create-pull-request
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ needs.extractor.outputs.branch }}
+        branch: ${{ steps.create-branch.outputs.branch }}
         base: 'main'
         commit_message: 'Adiciona novo pacote e atualiza dependências'
         title: 'Adiciona novo pacote e atualiza dependências'

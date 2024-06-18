@@ -73,5 +73,3 @@ jobs:
         Write-Information "Execution complete."
  
       shell: pwsh
-
-    

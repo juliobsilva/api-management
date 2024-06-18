@@ -1,5 +1,5 @@
 name: APIM APIOPS Publisher
- 
+
 on:
   workflow_call:
     inputs:
@@ -11,16 +11,16 @@ on:
         required: true
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
- 
+
 jobs:
- 
+
   publisher:
     environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
     outputs:
       last_commit_id: ${{ steps.commit.outputs.last_commit_id }}
     steps:
- 
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: 2
@@ -29,7 +29,7 @@ jobs:
       id: commit
       run: |
           echo "last_commit_id=${{ github.sha }}" >> $GITHUB_ENV
- 
+
     - name: Runs APIOPS Publisher
       env:
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -40,38 +40,38 @@ jobs:
         API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
         API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
         CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-enviroment }}.yaml
-        COMMIT_ID: ${{ inputs.commit-id != '' && inputs.commit-id || env.last_commit_id }}
- 
+        COMMIT_ID: ${{ inputs.commit-id == '' && inputs.commit-id || steps.commit.outputs.last_commit_id }}
+
       run: |
         Set-StrictMode -Version Latest
         $ErrorActionPreference = "Stop"
         $VerbosePreference = "Continue"
         $InformationPreference = "Continue"
- 
+
         Write-Information "Setting name variables..."
         $releaseFileName = "publisher-linux-x64.zip"
         $executableFileName = "publisher"
- 
+
         Write-Information "Downloading release..."
         $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
         $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
         Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
- 
+
         Write-Information "Extracting release..."
         $executableFolderPath = Join-Path "${{ runner.temp }}" "publisher"
         Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
         $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
- 
+
         Write-Information "Setting file permissions..."
         & chmod +x "$executableFilePath"
         if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
- 
+
         Write-Information "Running publisher..."
         & "$executableFilePath"
         if ($LASTEXITCODE -ne 0) { throw "Running publisher failed."}
- 
+
         Write-Information "Execution complete."
- 
+
       shell: pwsh
 
     

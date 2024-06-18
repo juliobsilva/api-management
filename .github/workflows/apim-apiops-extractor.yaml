@@ -81,30 +81,22 @@ jobs:
         name: artifacts-from-portal
         path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
 
-  create-pull-request:
-    needs: extractor
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.extractor.outputs.branch }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./.github/actions/create-pull-request
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./.github/actions/create-pull-request
 
-      - name: Run custom action to create PR
-        uses: ./.github/actions/create-pull-request
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ needs.extractor.outputs.branch }}
-          base: 'main'
-          commit_message: 'Adiciona novo pacote e atualiza dependências'
-          title: 'Adiciona novo pacote e atualiza dependências'
-          body: 'Este PR adiciona um novo pacote e atualiza as dependências.'
+    - name: Run custom action to create PR
+      uses: ./.github/actions/create-pull-request
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ needs.extractor.outputs.branch }}
+        base: 'main'
+        commit_message: 'Adiciona novo pacote e atualiza dependências'
+        title: 'Adiciona novo pacote e atualiza dependências'
+        body: 'Este PR adiciona um novo pacote e atualiza as dependências.'

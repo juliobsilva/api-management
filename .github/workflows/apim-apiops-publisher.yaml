@@ -17,18 +17,12 @@ jobs:
   publisher:
     environment: ${{ github.event_name == 'pull_request' && 'prod' || inputs.destination-enviroment }}
     runs-on: ubuntu-latest
-    # outputs:
-    #   last_commit_id: ${{ steps.commit.outputs.last_commit_id }}
+
     steps:
  
     - uses: actions/checkout@v3
       with:
         fetch-depth: 2
-
-    # - name: Set the Commit Id
-    #   id: commit
-    #   run: |
-    #       echo "last_commit_id=${{ github.sha }}" >> $GITHUB_ENV
  
     - name: Runs APIOPS Publisher
       env:

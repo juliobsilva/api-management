@@ -15,7 +15,7 @@ env:
 jobs:
  
   publisher:
-    environment: ${{ github.event_name == 'pull_request' && 'prod' || inputs.destination-enviroment }}
+    environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
 
     steps:

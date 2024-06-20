@@ -15,23 +15,30 @@ on:
     
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
-  job_executed: false
+
 jobs:
   
   publisher-prod:
-    if: github.event.workflow_run.conclusion != 'success'
+    if: ${{ needs.set-flag.outputs.run_prod == 'true' && needs.set-flag.outputs.run_hml != 'true' }}
+    
     environment: ${{ inputs.destination-enviroment-prod }}
     runs-on: ubuntu-latest
-
+    outputs:
+      run-prod: ${{ steps.set-prod-flag.outputs.run_prod }}
+      run-hml: ${{ steps.set-hml-flag.outputs.run_hml }}
     steps:
- 
+      
     - uses: actions/checkout@v3
       with:
         fetch-depth: 1
 
-    - name: Set Job Flag
-      id: set-flag
-      run: echo "::set-output name=job_executed::true"
+    - name: Set Prod Flag
+      id: set-prod-flag
+      run: echo "::set-output name=run_prod::true"
+      
+    - name: Set HML Flag
+      id: set-hml-flag
+      run: echo "::set-output name=run_hml::true"
  
     - name: Runs APIOPS Publisher
       env:
@@ -78,7 +85,9 @@ jobs:
       shell: pwsh
   
   publisher-hml:
-    if: ${{ needs.publisher-prod.outputs.job_executed == 'false' }}
+
+    if: ${{ needs.publisher-prod.outputs.run-prod == 'true' && needs.publisher-prod.outputs.run_hml != 'true' }}
+
     environment: ${{ inputs.destination-enviroment-hml }}
     runs-on: ubuntu-latest
 

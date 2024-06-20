@@ -19,13 +19,12 @@ env:
 jobs:
   
   publisher-prod:
-    if: ${{ needs.set-flag.outputs.run_prod == 'true' && needs.set-flag.outputs.run_hml != 'true' }}
+    if: ${{ needs.set-flag.outputs.run_hml == 'false' }}
     
     environment: ${{ inputs.destination-enviroment-prod }}
     runs-on: ubuntu-latest
     outputs:
-      run-prod: ${{ steps.set-prod-flag.outputs.run_prod }}
-      run-hml: ${{ steps.set-hml-flag.outputs.run_hml }}
+      run-prod: ${{ steps.set-prod-flag.outputs.run_prod }}      
     steps:
       
     - uses: actions/checkout@v3
@@ -35,10 +34,6 @@ jobs:
     - name: Set Prod Flag
       id: set-prod-flag
       run: echo "::set-output name=run_prod::true"
-      
-    - name: Set HML Flag
-      id: set-hml-flag
-      run: echo "::set-output name=run_hml::true"
  
     - name: Runs APIOPS Publisher
       env:
@@ -86,16 +81,21 @@ jobs:
   
   publisher-hml:
 
-    if: ${{ needs.publisher-prod.outputs.run-prod == 'true' && needs.publisher-prod.outputs.run_hml != 'true' }}
+    if: ${{ needs.publisher-prod.outputs.run-prod == 'false' }}
 
     environment: ${{ inputs.destination-enviroment-hml }}
     runs-on: ubuntu-latest
-
+    outputs:
+      run-hml: ${{ steps.set-hml-flag.outputs.run_hml }} 
     steps:
  
     - uses: actions/checkout@v3
       with:
         fetch-depth: 1
+
+    - name: Set HML Flag
+      id: set-hml-flag
+      run: echo "::set-output name=run_hml::true"
  
     - name: Runs APIOPS Publisher
       env:

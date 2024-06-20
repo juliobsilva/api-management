@@ -19,8 +19,6 @@ env:
 jobs:
   
   publisher-prod:
-    
-    if: ${{ needs.publisher-hml.outputs.run-hml == 'false' }}
 
     environment: ${{ inputs.destination-enviroment-prod }}
     runs-on: ubuntu-latest
@@ -81,7 +79,7 @@ jobs:
       shell: pwsh
   
   publisher-hml:
-    needs: publisher-prod
+
     if: ${{ needs.publisher-prod.outputs.run-prod == 'false' }}
 
     environment: ${{ inputs.destination-enviroment-hml }}

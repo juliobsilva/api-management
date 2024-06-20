@@ -22,7 +22,7 @@ jobs:
     - name: Create new branch
       id: create-branch
       run: |
-        BRANCH_NAME="extracto/nome-${{ github.run_id }}"
+        BRANCH_NAME="extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git checkout -b $BRANCH_NAME

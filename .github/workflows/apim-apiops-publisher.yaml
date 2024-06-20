@@ -15,7 +15,7 @@ env:
 jobs:
  
   publisher:
-    environment: ${{ inputs.commit-id }}
+    environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
 
     steps:

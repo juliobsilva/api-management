@@ -12,12 +12,14 @@ on:
       commit-id:
         type: string
         required: true
+    
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
  
 jobs:
- 
+  
   publisher-prod:
+    if: github.event.workflow_run.conclusion != 'success'
     environment: ${{ inputs.destination-enviroment-prod }}
     runs-on: ubuntu-latest
 

@@ -79,7 +79,7 @@ jobs:
       shell: pwsh
   
   publisher-hml:
-
+    needs: publisher-prod
     if: ${{ needs.publisher-prod.outputs.run-prod == 'false' }}
 
     environment: ${{ inputs.destination-enviroment-hml }}

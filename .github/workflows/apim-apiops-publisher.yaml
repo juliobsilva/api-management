@@ -15,7 +15,7 @@ env:
 
 jobs:
   
-  publisher-prod:
+  publisher:
 
     environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest

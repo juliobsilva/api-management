@@ -29,7 +29,7 @@ jobs:
       #   git push origin $BRANCH_NAME
       #   echo "::set-output name=branch::$BRANCH_NAME"
       run: |
-          $BRANCH_NAME = "extracted-api/run-${{ github.run_number }}-${{ github.run_attempt }}"
+          $BRANCH_NAME = "extracted-api/run-$(${{github.run_number}})-$(${{github.run_attempt}})"
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout -b $BRANCH_NAME

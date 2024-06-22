@@ -90,7 +90,7 @@ jobs:
       working-directory: ./.github/actions/create-pull-request
 
     - name: Run custom action to create PR
-      uses:  juliobsilva/action_github/.github/actions/action.yaml@main  
+      uses:  juliobsilva/action_github/.github/actions@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.create-branch.outputs.branch }}

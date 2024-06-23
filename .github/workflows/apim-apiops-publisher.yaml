@@ -46,7 +46,7 @@ jobs:
  
         Write-Information "Setting name variables..."
         $releaseFileName = "publisher-linux-x64.zip"
-        $executableFileName = "publisher-jr"
+        $executableFileName = "publisher"
  
         Write-Information "Downloading release..."
         $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"

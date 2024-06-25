@@ -86,6 +86,7 @@ jobs:
       id: calc_build_number
 
       run: |
+        git checkout main
         git fetch --tags
         if [[ "${{ steps.get_latest_tag.outputs.latest_tag }}" =~ ^RTS[0-9]+BN([0-9]+)$ ]]; then
             BUILD_NUMBER=$((BASH_REMATCH[1]+1))

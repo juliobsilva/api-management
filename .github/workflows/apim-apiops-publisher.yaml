@@ -3,7 +3,7 @@ name: APIM APIOPS Publisher
 on:
   workflow_call:
     inputs:
-      destination-enviroment:
+      destination-environment:
         type: string
         required: true
       commit-id:
@@ -17,7 +17,7 @@ jobs:
   
   publisher:
 
-    environment: ${{ inputs.destination-enviroment }}
+    environment: ${{ inputs.destination-environment }}
     runs-on: ubuntu-latest
     
     steps:
@@ -35,7 +35,7 @@ jobs:
         AZURE_RESOURCE_GROUP_NAME: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
         API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
         API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
-        CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-enviroment }}.yaml
+        CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-environment }}.yaml
         COMMIT_ID: ${{ inputs.commit-id != '' && inputs.commit-id || github.sha }}
  
       run: |

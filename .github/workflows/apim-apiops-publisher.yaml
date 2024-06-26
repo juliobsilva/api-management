@@ -3,7 +3,7 @@ name: APIM APIOPS Publisher
 on:
   workflow_call:
     inputs:
-      destination-environment:
+      destination-enviroment:
         type: string
         required: true
       commit-id:
@@ -17,7 +17,7 @@ jobs:
   
   publisher:
 
-    environment: ${{ inputs.destination-environment }}
+    environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
     
     steps:

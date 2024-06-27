@@ -3,7 +3,7 @@ name: APIM APIOPS Extractor
 on:
   workflow_call:
     inputs:
-      source-environment:
+      source-enviroment:
         type: string
         required: true
  
@@ -13,7 +13,7 @@ env:
 jobs:
   extractor:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.source-environment }}
+    environment: ${{ inputs.source-enviroment }}
     outputs:
       branch:   ${{ steps.create-branch.outputs.branch }}
       datetemp: ${{ steps.timestamp.outputs.datetemp  }}

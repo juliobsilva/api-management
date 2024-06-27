@@ -6,9 +6,7 @@ on:
       destination-enviroment:
         type: string
         required: true
-      # commit-id:
-      #   type: string
-      #   required: true
+
       release:
         type: string
         required: true
@@ -23,8 +21,7 @@ jobs:
 
     environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
-    # outputs:
-    #   commit-id: ${{steps.get-commit-id.outputs.commit-id}}
+
     steps:
       
     - uses: actions/checkout@v3
@@ -82,5 +79,4 @@ jobs:
         Write-Information "Execution complete."
  
       shell: pwsh
-  
-#COMMIT_HASH=$(echo $OUTPUT_COMMIT_ID | grep -oP '^[0-9a-f]{40}')    
+   

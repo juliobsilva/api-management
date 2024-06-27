@@ -36,7 +36,7 @@ jobs:
       run: |
          git fetch --tags
          OUTPUT_COMMIT_ID=$(git show-ref --tags | grep ${{inputs.release}})
-         COMMIT_HASH=$(echo $input_str | grep -oP '^[0-9a-f]{40}')        
+         COMMIT_HASH=$(echo $OUTPUT_COMMIT_ID | grep -oP '^[0-9a-f]{40}')        
          echo "commit-id=$COMMIT_HASH" >> $GITHUB_ENV 
  
     - name: Runs APIOPS Publisher

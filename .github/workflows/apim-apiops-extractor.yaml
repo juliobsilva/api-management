@@ -18,6 +18,7 @@ jobs:
       branch:   ${{ steps.create-branch.outputs.branch }}
       
     steps:
+
     - uses: actions/checkout@v4
  
     - name: Create new branch

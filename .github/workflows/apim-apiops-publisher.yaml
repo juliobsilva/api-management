@@ -6,9 +6,13 @@ on:
       destination-enviroment:
         type: string
         required: true
-      commit-id:
+      # commit-id:
+      #   type: string
+      #   required: true
+      release:
         type: string
         required: true
+      
     
 env:
   apiops_release_version: v6.0.0-alpha.1.0.9
@@ -19,12 +23,19 @@ jobs:
 
     environment: ${{ inputs.destination-enviroment }}
     runs-on: ubuntu-latest
-    
+    # outputs:
+    #   commit-id: ${{steps.get-commit-id.outputs.commit-id}}
     steps:
       
     - uses: actions/checkout@v3
       with:
         fetch-depth: 1
+
+    - name: Get commit_id
+      id: get-commit-id
+      run: |
+         OUTPUT_COMMIT_ID=$(git show-ref --tags | grep ${{inputs.release}})         
+         echo "commit-id=$OUTPUT_COMMIT_ID" >> $GITHUB_ENV 
  
     - name: Runs APIOPS Publisher
       env:
@@ -36,7 +47,7 @@ jobs:
         API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
         API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
         CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-enviroment }}.yaml
-        COMMIT_ID: ${{ inputs.commit-id != '' && inputs.commit-id || github.sha }}
+        COMMIT_ID: ${{ inputs.release != '' && env.commit-id || github.sha }}
  
       run: |
         Set-StrictMode -Version Latest

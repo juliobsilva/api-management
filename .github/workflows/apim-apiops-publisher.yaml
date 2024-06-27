@@ -35,7 +35,7 @@ jobs:
       id: get-commit-id
       run: |
          git fetch --tags
-         OUTPUT_COMMIT_ID=$(git show-ref --tags | grep ${{inputs.release}} 2>/dev/null || echo "none" )
+         OUTPUT_COMMIT_ID=$(git show-ref --tags | grep "${{ inputs.release }}" 2>/dev/null | awk '{print $1}' || echo "none")
          COMMIT_HASH=$(echo $OUTPUT_COMMIT_ID | grep -oP '^[0-9a-f]{40}')        
          echo "commit-id=$COMMIT_HASH" >> $GITHUB_ENV 
  

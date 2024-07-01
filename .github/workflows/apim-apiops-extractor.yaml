@@ -65,19 +65,16 @@ jobs:
           executableFilePath="$executableFolderPath/$executableFileName"
 
           echo "Setting file permissions..."
-          chmod +xx "$executableFilePath"
-
-          echo "Running extractor..."
-          "$executableFilePath"
+          chmod +x "$executableFilePath"
 
           echo "Running extractor..."
           "$executableFilePath"
           if [ $? -ne 0 ]; then
               echo "Running extractor failed." >&2
               exit 1
+          else
+              echo "Execution completed successfully."
           fi
-
-          echo "Execution complete ."
 
 
 

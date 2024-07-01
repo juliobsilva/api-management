@@ -76,10 +76,9 @@ jobs:
           if [ $? -ne 0 ]; then
               echo "Running extractor failed." >&2
               exit 1
-          else
-              echo "Execution completed successfully."
+          else  
+              echo "echo "Execution complete."
           fi
-
+ 
           
-
    

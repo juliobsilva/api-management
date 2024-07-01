@@ -13,7 +13,7 @@ on:
       
     
 env:
-  apiops_release_version: v6.0.0-alpha.1.0.9
+  APIOPS_RELEASE_VERSION: v6.0.0-alpha.1.0.9
 
 jobs:
   
@@ -34,7 +34,7 @@ jobs:
          git fetch --tags
          TAG_NAME="${{inputs.release}}"
          OUTPUT_COMMIT_ID=$(git rev-list -n 1 $(git tag --contains $TAG_NAME) || echo "none")             
-         echo "commit-id=$OUTPUT_COMMIT_ID" >> $GITHUB_ENV 
+         echo "COMMIT-ID=$OUTPUT_COMMIT_ID" >> $GITHUB_ENV 
  
     - name: Runs APIOPS Publisher
       env:
@@ -46,37 +46,33 @@ jobs:
         API_MANAGEMENT_SERVICE_NAME: ${{ secrets.API_MANAGEMENT_SERVICE_NAME }}
         API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ GITHUB.WORKSPACE }}/apimartifacts
         CONFIGURATION_YAML_PATH: ${{ GITHUB.WORKSPACE }}/configuration.${{ inputs.destination-enviroment }}.yaml
-        COMMIT_ID: ${{ inputs.release != '' && env.commit-id || github.sha }}
+        COMMIT_ID: ${{ inputs.release != '' && env.COMMIT-ID || github.sha }}
  
       run: |
-        Set-StrictMode -Version Latest
-        $ErrorActionPreference = "Stop"
-        $VerbosePreference = "Continue"
-        $InformationPreference = "Continue"
- 
-        Write-Information "Setting name variables..."
-        $releaseFileName = "publisher-linux-x64.zip"
-        $executableFileName = "publisher"
- 
-        Write-Information "Downloading release..."
-        $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
-        $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
-        Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
- 
-        Write-Information "Extracting release..."
-        $executableFolderPath = Join-Path "${{ runner.temp }}" "publisher"
-        Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
-        $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
- 
-        Write-Information "Setting file permissions..."
-        & chmod +x "$executableFilePath"
-        if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
- 
-        Write-Information "Running publisher..."
-        & "$executableFilePath"
-        if ($LASTEXITCODE -ne 0) { throw "Running publisher failed."}
- 
-        Write-Information "Execution complete."
- 
-      shell: pwsh
+    
+          set -e
+          set -o pipefail
+
+          echo "Setting name variables..."
+          releaseFileName="extractor-linux-x64.zip"
+          executableFileName="extractor"
+
+          echo "Downloading release..."
+          uri="https://github.com/Azure/apiops/releases/download/${{env.APIOPS_RELEASE_VERSION}}/$releaseFileName"
+          downloadFilePath="${RUNNER_TEMP}/$releaseFileName"
+          curl -L -o "$downloadFilePath" "$uri"
+
+          echo "Extracting release..."
+          executableFolderPath="${{runner.temp}}/extractor"
+          mkdir -p "$executableFolderPath"
+          unzip "$downloadFilePath" -d "$executableFolderPath"
+          executableFilePath="$executableFolderPath/$executableFileName"
+
+          echo "Setting file permissions..."
+          chmod +x "$executableFilePath"
+
+          echo "Running extractor..."
+          "$executableFilePath"
+
+          echo "Execution complete."
    

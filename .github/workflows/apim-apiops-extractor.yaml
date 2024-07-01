@@ -65,7 +65,7 @@ jobs:
           executableFilePath="$executableFolderPath/$executableFileName"
 
           echo "Setting file permissions..."
-          chmod +x "$executableFilePath"
+          chmod +xx "$executableFilePath"
 
           echo "Running extractor..."
           "$executableFilePath"

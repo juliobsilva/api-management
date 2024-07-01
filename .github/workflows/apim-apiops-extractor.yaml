@@ -8,7 +8,8 @@ on:
         required: true
  
 env:
-  apiops_release_version: v6.0.0-alpha.1.0.9
+  #apiops_release_version: v6.0.0-alpha.1.0.9
+  APIOPS_RELEASE_VERSION: v6.0.0-alpha.1.0.9
  
 jobs:
   extractor:
@@ -45,36 +46,33 @@ jobs:
         API_SPECIFICATION_FORMAT: "OpenAPIV3Yaml"
         CONFIGURATION_YAML_PATH:  ${{ GITHUB.WORKSPACE }}/configuration.extractor.yaml
       run: |
-        Set-StrictMode -Version Latest
-        $ErrorActionPreference = "Stop"
-        $VerbosePreference = "Continue"
-        $InformationPreference = "Continue"
- 
-        Write-Information "Setting name variables..."
-        $releaseFileName = "extractor-linux-x64.zip"
-        $executableFileName = "extractor"
- 
-        Write-Information "Downloading release..."
-        $uri = "https://github.com/Azure/apiops/releases/download/${{ env.apiops_release_version }}/$releaseFileName"
-        $downloadFilePath = Join-Path "${{ runner.temp }}" $releaseFileName
-        Invoke-WebRequest -Uri "$uri" -OutFile "$downloadFilePath"
- 
-        Write-Information "Extracting release..."
-        $executableFolderPath = Join-Path "${{ runner.temp }}" "extractor"
-        Expand-Archive -Path "$downloadFilePath" -DestinationPath "$executableFolderPath"
-        $executableFilePath = Join-Path "$executableFolderPath" $executableFileName
- 
-        Write-Information "Setting file permissions..."
-        & chmod +x "$executableFilePath"
-        if ($LASTEXITCODE -ne 0) { throw "Setting file permissions failed."}
- 
-        Write-Information "Running extractor..."
-        & "$executableFilePath"
-        if ($LASTEXITCODE -ne 0) { throw "Running extractor failed."}
- 
-        Write-Information "Execution complete."
 
-      shell: pwsh
+          set -e
+          set -o pipefail
+
+          echo "Setting name variables..."
+          releaseFileName="extractor-linux-x64.zip"
+          executableFileName="extractor"
+
+          echo "Downloading release..."
+          uri="https://github.com/Azure/apiops/releases/download/${{env.APIOPS_RELEASE_VERSION}}/$releaseFileName"
+          downloadFilePath="${RUNNER_TEMP}/$releaseFileName"
+          curl -L -o "$downloadFilePath" "$uri"
+
+          echo "Extracting release..."
+          executableFolderPath="${{runner.temp}}/extractor"
+          mkdir -p "$executableFolderPath"
+          unzip "$downloadFilePath" -d "$executableFolderPath"
+          executableFilePath="$executableFolderPath/$executableFileName"
+
+          echo "Setting file permissions..."
+          chmod +x "$executableFilePath"
+
+          echo "Running extractor..."
+          "$executableFilePath"
+
+          echo "Execution complete."
+
 
 
     - name: publish artifact

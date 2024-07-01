@@ -70,7 +70,15 @@ jobs:
           echo "Running extractor..."
           "$executableFilePath"
 
-          echo "Execution complete."
+          echo "Running extractor..."
+          "$executableFilePath"
+          if [ $? -ne 0 ]; then
+              echo "Running extractor failed." >&2
+              exit 1
+          fi
+
+          echo "Execution complete ."
+
 
 
 

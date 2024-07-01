@@ -8,7 +8,6 @@ on:
         required: true
  
 env:
-  #apiops_release_version: v6.0.0-alpha.1.0.9
   APIOPS_RELEASE_VERSION: v6.0.0-alpha.1.0.9
  
 jobs:
@@ -66,12 +65,20 @@ jobs:
           executableFilePath="$executableFolderPath/$executableFileName"
 
           echo "Setting file permissions..."
-          chmod +x "$executableFilePath"
+          chmod +xx "$executableFilePath"
 
           echo "Running extractor..."
           "$executableFilePath"
 
-          echo "Execution complete."
+          echo "Running extractor..."
+          "$executableFilePath"
+          if [ $? -ne 0 ]; then
+              echo "Running extractor failed." >&2
+              exit 1
+          fi
+
+          echo "Execution complete ."
+
 
 
 

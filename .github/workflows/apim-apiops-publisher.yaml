@@ -55,7 +55,7 @@ jobs:
 
           echo "Setting name variables..."
           releaseFileName="publisher-linux-x64.zip"
-          executableFileName="extractor"
+          executableFileName="publisher"
 
           echo "Downloading release..."
           uri="https://github.com/Azure/apiops/releases/download/${{env.APIOPS_RELEASE_VERSION}}/$releaseFileName"

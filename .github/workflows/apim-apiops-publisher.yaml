@@ -32,7 +32,7 @@ jobs:
       id: get-commit-id
       run: |
          git fetch --tags
-         TAG_NAME="${{inputs.release}}"
+         TAG_NAME="${{ inputs.release }}"
          OUTPUT_COMMIT_ID=$(git rev-list -n 1 $(git tag --contains $TAG_NAME) || echo "none")             
          echo "COMMIT-ID=$OUTPUT_COMMIT_ID" >> $GITHUB_ENV 
  
@@ -58,12 +58,12 @@ jobs:
           executableFileName="publisher"
 
           echo "Downloading release..."
-          uri="https://github.com/Azure/apiops/releases/download/${{env.APIOPS_RELEASE_VERSION}}/$releaseFileName"
+          uri="https://github.com/Azure/apiops/releases/download/${{ env.APIOPS_RELEASE_VERSION }}/$releaseFileName"
           downloadFilePath="${RUNNER_TEMP}/$releaseFileName"
           curl -L -o "$downloadFilePath" "$uri"
 
           echo "Extracting release..."
-          executableFolderPath="${{runner.temp}}/publisher"
+          executableFolderPath="${{ runner.temp }}/publisher"
           mkdir -p "$executableFolderPath"
           unzip "$downloadFilePath" -d "$executableFolderPath"
           executableFilePath="$executableFolderPath/$executableFileName"

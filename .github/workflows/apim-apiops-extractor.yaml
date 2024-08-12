@@ -54,7 +54,7 @@ jobs:
           executableFileName="extractor"
 
           echo "Downloading release..."
-          uri="https://github.com/Azure/apiops/releases/download/${{env.APIOPS_RELEASE_VERSION}}/$releaseFileName"
+          uri="https://github.com/Azure/apiops/releases/download/${{ env.APIOPS_RELEASE_VERSION }}/$releaseFileName"
           downloadFilePath="${RUNNER_TEMP}/$releaseFileName"
           curl -L -o "$downloadFilePath" "$uri"
 
@@ -76,13 +76,10 @@ jobs:
               echo "Execution completed successfully."
           fi
 
-
-
-
     - name: publish artifact
       uses: actions/upload-artifact@v4
       env:
-        API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts  # change this to the artifacts folder  
+        API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts
       with:
         name: artifacts-from-portal
         path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}

@@ -77,8 +77,7 @@ jobs:
               echo "Running publisher failed." >&2
               exit 1
           else  
-              echo "echo "Running publisher complete."
+              echo "Running publisher complete."
           fi
  
-          
    

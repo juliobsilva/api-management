@@ -59,7 +59,7 @@ jobs:
 
           echo "Downloading release..."
           uri="https://github.com/Azure/apiops/releases/download/${{ env.APIOPS_RELEASE_VERSION }}/$releaseFileName"
-          downloadFilePath="${RUNNER_TEMP}/$releaseFileName"
+          downloadFilePath="${{ runner.temp }}/$releaseFileName"
           curl -L -o "$downloadFilePath" "$uri"
 
           echo "Extracting release..."

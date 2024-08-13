@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.source-environment }}
 
-    outputs:
-      branch:   ${{ steps.create-branch.outputs.branch }}
+    # outputs:
+    #   branch:   ${{ steps.create-branch.outputs.branch }}
       
     steps:
       
@@ -81,7 +81,7 @@ jobs:
       env:
         API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: apimartifacts
       with:
-        name: artifacts-from-portal
+        #name: artifacts-from-portal
         path: ${{ GITHUB.WORKSPACE }}/${{ env.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
 
 
